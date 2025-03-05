@@ -5,9 +5,16 @@ import { LuBeef } from "react-icons/lu";
 import { CiSearch } from "react-icons/ci";
 import "./Main.css";
 import API_URL from "./config";
+  //로컬스토리지에서 토큰, userId 받기
+  const storedData = localStorage.getItem("jwt");
+  const parsedData = JSON.parse(storedData);
+  const userId = parsedData.userId;
+  const token = parsedData.token;
 
 // CustomSelect 컴포넌트 (재사용 가능)
 function CustomSelect({ options, placeholder, value, onChange }) {
+
+  
   const [open, setOpen] = useState(false);
 
   const toggleOpen = (e) => {
@@ -86,7 +93,7 @@ export default function Main() {
   // 검색 옵션
   const searchOptionOptions = ["음식명으로 검색", "재료로 검색"];
   // 검색 필터 옵션
-  const filterOptions = ["전체", "찜", "조림", "볶음", "구이", "탕"];
+  const filterOptions = ["전체", "반찬", "국&찌개", "후식", "일품", "구이"];
 
   // API 요청 핸들러
   const handleSearch = async (e) => {
@@ -118,7 +125,13 @@ export default function Main() {
     }
 
     try {
-      const response = await fetch(`${apiUrl}?${params.toString()}`);
+      const response = await fetch(`${apiUrl}?${params.toString()}`,
+      {
+        headers: {
+          "Authorization": `Bearer ${token}`,  // Bearer 방식으로 토큰 전달
+          "Content-Type": "application/json",
+        }
+      });
       if (!response.ok) {
         throw new Error("API 요청 실패");
       }
@@ -140,7 +153,14 @@ export default function Main() {
     // 인기 레시피 불러오기
     const fetchTopRecipes = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/recipes/topliked`);
+        const response = await fetch(`${API_URL}/api/recipes/topliked`,
+          {
+            headers: {
+              "Authorization": `Bearer ${token}`,  // Bearer 방식으로 토큰 전달
+              "Content-Type": "application/json",
+            }
+          }
+        );
         if (!response.ok) {
           throw new Error("API 요청 실패");
         }
@@ -226,7 +246,7 @@ export default function Main() {
                 <div
                   key={recipe.recipeId}
                   className="recipe-card"
-                  onClick={() => navigate(`/recipe/${recipe.recipeId}`)}
+                  onClick={() => navigate(`/recipe/${recipe.id}`)}
                 >
                   <img src={recipe.imageLarge || "default-image.jpg"} alt={recipe.title} />
                   <h3>{recipe.title}</h3>

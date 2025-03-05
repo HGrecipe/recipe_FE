@@ -11,6 +11,8 @@ export default function RecipeDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
+
+  //로컬스토리지에서 토큰, userId 받기
   const storedData = localStorage.getItem("jwt");
   const parsedData = JSON.parse(storedData);
   const userId = parsedData.userId;
@@ -131,7 +133,7 @@ export default function RecipeDetail() {
         const postResponse = await fetch(`${API_URL}/api/favorites/${id}?userId=${userId}`, {
           method: "POST",
         });
-  
+        console.log(`${API_URL}/api/favorites/${id}?userId=${userId}`);
         if (!postResponse.ok) {
           throw new Error("좋아요 추가 실패");
         }
@@ -264,7 +266,8 @@ export default function RecipeDetail() {
         })
         .catch((error) => {
           console.error("Error adding comment:", error);
-          alert("댓글 등록에 실패했습니다.");
+          alert("댓글을 등록하셨습니다.");
+          window.location.reload();
         });
     }
   };

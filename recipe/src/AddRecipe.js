@@ -96,15 +96,15 @@ export default function AddRecipe() {
     // 필수 항목 확인: 제목, 메인 사진, 열량, 재료, 최소 1단계 설명
     if (
       !title ||
-      !mainImageFile ||
+      //!mainImageFile ||
       !calorie ||
       !ingredients ||
       !steps[0].description ||
       !cookingMethod ||
       !category ||
       !hashTag ||
-      !weight ||
-      !imageSmall
+      !weight
+      //!imageSmall
     ) {
       alert("필수 항목을 모두 입력해주세요.");
       return;
